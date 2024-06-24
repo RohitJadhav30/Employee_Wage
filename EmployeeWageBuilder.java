@@ -4,10 +4,12 @@ public class EmployeeWageBuilder {
         final int IS_PART_TIME = 2;
         final int EMP_HOURLY_WAGE = 20;
         final int MONTHLY_WORKING_DAYS = 20;
+        final int MAX_HOURS_PER_MONTH = 100;
 
-        int hoursPerday = 0, totalEmpWage = 0;
+        int hoursPerday = 0, totalEmpHrs = 0, totalWorkingDays = 0;
 
-        for(int day = 1; day <= MONTHLY_WORKING_DAYS; day++){
+        while(totalEmpHrs <= MAX_HOURS_PER_MONTH || totalWorkingDays <= MONTHLY_WORKING_DAYS){
+            totalWorkingDays++;
             int empCheck = (int)Math.floor(Math.random() * 10) % 3;
 
         switch (empCheck) {
@@ -23,11 +25,13 @@ public class EmployeeWageBuilder {
             hoursPerday = 0;
                 break;
         }
-            int empDailyWage = EMP_HOURLY_WAGE * hoursPerday;
+            totalEmpHrs += hoursPerday;
 
-            totalEmpWage += empDailyWage;
         }
+        int totalEmpWage = totalEmpHrs * EMP_HOURLY_WAGE;
 
         System.out.println("The employees monthly wage is: " + totalEmpWage + "rs");
     }
 }
+
+
