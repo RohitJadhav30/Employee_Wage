@@ -1,14 +1,27 @@
-public class EmployeeWageBuilder {
-    final int IS_FULL_TIME = 1;
-    final int IS_PART_TIME = 2;
-    final int EMP_HOURLY_WAGE = 20;
-    final int MONTHLY_WORKING_DAYS = 20;
-    final int MAX_HOURS_PER_MONTH = 100;
+import java.util.Scanner;
 
-    int hoursPerday = 0, totalEmpHrs = 0, totalWorkingDays = 0;
+public class EmployeeWageBuilder{
+    public static final int IS_FULL_TIME = 1;
+    public static final int IS_PART_TIME = 2;
+
+    private final String company;
+    private final int maxHoursPerMonth;
+    private final int monthlyWorkingDays;
+    private final int empHourlyWage;
+    
+    private int totalEmpWage;
+
+    public EmployeeWageBuilder(String company, int maxHoursPerMonth, int monthlyWorkingDays, int empHourlyWage){
+        this.company = company;
+        this.maxHoursPerMonth = maxHoursPerMonth;
+        this.monthlyWorkingDays = monthlyWorkingDays;
+        this.empHourlyWage = empHourlyWage;
+
+    }
 
     public void calculateWage(){
-        while(totalEmpHrs <= MAX_HOURS_PER_MONTH || totalWorkingDays <= MONTHLY_WORKING_DAYS){
+        int hoursPerday = 0, totalEmpHrs = 0, totalWorkingDays = 0;
+        while(totalEmpHrs <= maxHoursPerMonth && totalWorkingDays < monthlyWorkingDays){
             totalWorkingDays++;
             int empCheck = (int)Math.floor(Math.random() * 10) % 3;
 
@@ -28,13 +41,34 @@ public class EmployeeWageBuilder {
             totalEmpHrs += hoursPerday;
 
         }
-        int totalEmpWage = totalEmpHrs * EMP_HOURLY_WAGE;
-
-        System.out.println("The employees monthly wage is: " + totalEmpWage + "rs");
+        totalEmpWage = totalEmpHrs * empHourlyWage;
 
     }
+
+    @Override
+    public String toString(){
+        return "The company name is " + company + " And the total employee wage is " + totalEmpWage + "rs";
+    }
     public static void main(String[] args) {
-        EmployeeWageBuilder uc = new EmployeeWageBuilder();
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter company name: ");
+        String company = sc.nextLine();
+
+        System.out.print("Enter max hours per month: ");
+        int maxHoursPerMonth = sc.nextInt();
+
+        System.out.print("Enter monthly working days: ");
+        int monthlyWorkingDays = sc.nextInt();
+
+        System.out.print("Enter hourly wage: ");
+        int empHourlyWage = sc.nextInt();
+        sc.close();
+
+        EmployeeWageBuilder uc = new EmployeeWageBuilder(company, maxHoursPerMonth, monthlyWorkingDays, empHourlyWage);
         uc.calculateWage();
+
+        System.out.println(uc.toString());
     }
 }
