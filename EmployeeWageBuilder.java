@@ -1,17 +1,15 @@
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EmployeeWageBuilder{
-    public static final int IS_FULL_TIME = 1;
-    public static final int IS_PART_TIME = 2;
-
-    private final String company;
-    private final int maxHoursPerMonth;
-    private final int monthlyWorkingDays;
-    private final int empHourlyWage;
+class CompanyEmpWage {
+    public final String company;
+    public final int maxHoursPerMonth;
+    public final int monthlyWorkingDays;
+    public final int empHourlyWage;
     
-    private int totalEmpWage;
+    public int totalEmpWage;
 
-    public EmployeeWageBuilder(String company, int maxHoursPerMonth, int monthlyWorkingDays, int empHourlyWage){
+    public CompanyEmpWage(String company, int maxHoursPerMonth, int monthlyWorkingDays, int empHourlyWage){
         this.company = company;
         this.maxHoursPerMonth = maxHoursPerMonth;
         this.monthlyWorkingDays = monthlyWorkingDays;
@@ -19,9 +17,44 @@ public class EmployeeWageBuilder{
 
     }
 
-    public void calculateWage(){
+    public void setTotalEmpWage(int totalEmpWage){
+        this .totalEmpWage = totalEmpWage;
+
+    }
+
+    @Override
+    public String toString(){
+        return "The company name is " + company + " And the total employee wage is " + totalEmpWage + "rs";
+    }
+}
+
+public class EmployeeWageBuilder{
+    public static final int IS_FULL_TIME = 1;
+    public static final int IS_PART_TIME = 2;
+
+    List<CompanyEmpWage> empWageArray;
+
+    public EmployeeWageBuilder(){
+        empWageArray = new ArrayList<>();
+    }
+
+    public void addCompanyEmpWage(String company, int maxHoursPerMonth, int monthlyWorkingDays, int empHourlyWage){
+        CompanyEmpWage companyEmpWage = new CompanyEmpWage(company, maxHoursPerMonth, monthlyWorkingDays, empHourlyWage);
+        empWageArray.add(companyEmpWage);
+    }
+
+    public void computeEmpWage(){
+        for (CompanyEmpWage companyEmpWage : empWageArray) {
+            int totalEmpWage = this.calculateWage(companyEmpWage);
+            companyEmpWage.setTotalEmpWage(totalEmpWage);
+            System.out.println(companyEmpWage);
+        }
+    }
+    
+
+    private int calculateWage(CompanyEmpWage companyEmpWage){
         int hoursPerday = 0, totalEmpHrs = 0, totalWorkingDays = 0;
-        while(totalEmpHrs <= maxHoursPerMonth && totalWorkingDays < monthlyWorkingDays){
+        while(totalEmpHrs <= companyEmpWage.maxHoursPerMonth && totalWorkingDays < companyEmpWage.monthlyWorkingDays){
             totalWorkingDays++;
             int empCheck = (int)Math.floor(Math.random() * 10) % 3;
 
@@ -41,34 +74,17 @@ public class EmployeeWageBuilder{
             totalEmpHrs += hoursPerday;
 
         }
-        totalEmpWage = totalEmpHrs * empHourlyWage;
+        return totalEmpHrs * companyEmpWage.empHourlyWage;
 
     }
 
-    @Override
-    public String toString(){
-        return "The company name is " + company + " And the total employee wage is " + totalEmpWage + "rs";
-    }
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        EmployeeWageBuilder empWageBuilder = new EmployeeWageBuilder();
 
-        System.out.print("Enter company name: ");
-        String company = sc.nextLine();
-
-        System.out.print("Enter max hours per month: ");
-        int maxHoursPerMonth = sc.nextInt();
-
-        System.out.print("Enter monthly working days: ");
-        int monthlyWorkingDays = sc.nextInt();
-
-        System.out.print("Enter hourly wage: ");
-        int empHourlyWage = sc.nextInt();
-        sc.close();
-
-        EmployeeWageBuilder uc = new EmployeeWageBuilder(company, maxHoursPerMonth, monthlyWorkingDays, empHourlyWage);
-        uc.calculateWage();
-
-        System.out.println(uc.toString());
+        empWageBuilder.addCompanyEmpWage("Zomato", 20, 2, 10);
+        empWageBuilder.addCompanyEmpWage("Swiggy", 80, 20, 10);
+        empWageBuilder.computeEmpWage();
     }
+        
 }
