@@ -11,22 +11,33 @@ class CompanyEmpWage {
     public final int maxHoursPerMonth;
     public final int monthlyWorkingDays;
     public final int empHourlyWage;
-    public int totalEmpWage;
+    private int totalEmpWage;
+    private List<Integer> dailyWages;
 
     public CompanyEmpWage(String company, int maxHoursPerMonth, int monthlyWorkingDays, int empHourlyWage) {
         this.company = company;
         this.maxHoursPerMonth = maxHoursPerMonth;
         this.monthlyWorkingDays = monthlyWorkingDays;
         this.empHourlyWage = empHourlyWage;
+        this.totalEmpWage = 0;
+        this.dailyWages = new ArrayList<>();
     }
 
     public void setTotalEmpWage(int totalEmpWage) {
         this.totalEmpWage = totalEmpWage;
     }
 
+    public void addDailyWage(int dailyWage) {
+        this.dailyWages.add(dailyWage);
+    }
+
+    public int getTotalEmpWage() {
+        return totalEmpWage;
+    }
+
     @Override
     public String toString() {
-        return "The company name is " + company + " and the total employee wage is " + totalEmpWage + " rs";
+        return "Company: " + company + ", Total Employee Wage: " + totalEmpWage + " rs, Daily Wages: " + dailyWages;
     }
 }
 
@@ -57,6 +68,7 @@ public class EmployeeWageBuilder implements IComputeEmpWage {
 
     private int calculateWage(CompanyEmpWage companyEmpWage) {
         int hoursPerDay = 0, totalEmpHrs = 0, totalWorkingDays = 0;
+        int dailyWage = 0;
 
         while (totalEmpHrs <= companyEmpWage.maxHoursPerMonth && totalWorkingDays < companyEmpWage.monthlyWorkingDays) {
             totalWorkingDays++;
@@ -75,6 +87,8 @@ public class EmployeeWageBuilder implements IComputeEmpWage {
             }
 
             totalEmpHrs += hoursPerDay;
+            dailyWage = hoursPerDay * companyEmpWage.empHourlyWage;
+            companyEmpWage.addDailyWage(dailyWage);
         }
 
         return totalEmpHrs * companyEmpWage.empHourlyWage;
