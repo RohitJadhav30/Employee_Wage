@@ -4,6 +4,7 @@ import java.util.List;
 interface IComputeEmpWage {
     void addCompanyEmpWage(String company, int maxHoursPerMonth, int monthlyWorkingDays, int empHourlyWage);
     void computeEmpWage();
+    int getTotalWage(String company);
 }
 
 class CompanyEmpWage {
@@ -41,13 +42,13 @@ class CompanyEmpWage {
     }
 }
 
-public class EmployeeWageBuilder implements IComputeEmpWage {
+public class EmpWageBuilder implements IComputeEmpWage {
     public static final int IS_FULL_TIME = 1;
     public static final int IS_PART_TIME = 2;
 
     private List<CompanyEmpWage> empWageList;
 
-    public EmployeeWageBuilder() {
+    public EmpWageBuilder() {
         empWageList = new ArrayList<>();
     }
 
@@ -64,6 +65,16 @@ public class EmployeeWageBuilder implements IComputeEmpWage {
             companyEmpWage.setTotalEmpWage(totalEmpWage);
             System.out.println(companyEmpWage);
         }
+    }
+
+    @Override
+    public int getTotalWage(String company) {
+        for (CompanyEmpWage companyEmpWage : empWageList) {
+            if (companyEmpWage.company.equals(company)) {
+                return companyEmpWage.getTotalEmpWage();
+            }
+        }
+        return 0;
     }
 
     private int calculateWage(CompanyEmpWage companyEmpWage) {
@@ -95,10 +106,14 @@ public class EmployeeWageBuilder implements IComputeEmpWage {
     }
 
     public static void main(String[] args) {
-        IComputeEmpWage empWageBuilder = new EmployeeWageBuilder();
+        IComputeEmpWage empWageBuilder = new EmpWageBuilder();
 
         empWageBuilder.addCompanyEmpWage("Zomato", 100, 20, 20);
         empWageBuilder.addCompanyEmpWage("Swiggy", 150, 22, 15);
         empWageBuilder.computeEmpWage();
+
+        String companyToQuery = "Zomato";
+        int totalWage = empWageBuilder.getTotalWage(companyToQuery);
+        System.out.println("Total wage for " + companyToQuery + ": " + totalWage + " rs");
     }
 }
